@@ -163,16 +163,21 @@ public class LibraryManagementSystem {
                     Transaction returnTransaction = transactionDAO.getTransactionById(transactionIdToReturn);
 
                     if (returnTransaction != null) {
-                        // Update return date and calculate fine
-                        returnTransaction.setReturnDate(new java.util.Date());
-                        transactionDAO.updateTransactionReturnDateAndFine(returnTransaction, FINE_RATE_PER_DAY);
 
-                        // Update book quantity
-                        Book returnedBook = returnTransaction.getBook();
-                        returnedBook.setQuantity(returnedBook.getQuantity() + 1);
-                        bookDAO.updateBook(returnedBook);
+                        if (returnTransaction.getReturnDate() != null) {
+                            System.out.println("This book has already been returned.");
+                        } else {
+                            // Update return date and calculate fine
+                            returnTransaction.setReturnDate(new java.util.Date());
+                            transactionDAO.updateTransactionReturnDateAndFine(returnTransaction, FINE_RATE_PER_DAY);
 
-                        System.out.println("Book returned successfully!");
+                            // Update book quantity
+                            Book returnedBook = returnTransaction.getBook();
+                            returnedBook.setQuantity(returnedBook.getQuantity() + 1);
+                            bookDAO.updateBook(returnedBook);
+
+                            System.out.println("Book returned successfully!");
+                        }
                     } else {
                         System.out.println("Invalid transaction ID for returning.");
                     }
